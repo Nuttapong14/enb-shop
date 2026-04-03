@@ -3,15 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>tiktok-auth</title>
+  <title>E&amp;B Shop — Electronics &amp; Beauty</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
       --red: #fe2c55;
       --cyan: #25f4ee;
+      --gold: #f5a623;
       --bg: #0a0a0a;
       --surface: #111111;
+      --surface2: #161616;
       --border: #1e1e1e;
       --text: #e2e2e2;
       --muted: #888;
@@ -26,35 +28,41 @@
       flex-direction: column;
     }
 
+    a { text-decoration: none; color: inherit; }
+
     /* ── NAV ── */
     nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1.25rem 2rem;
+      padding: 1rem 2rem;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
     }
 
     .logo {
-      font-size: 1.1rem;
-      font-weight: 700;
-      letter-spacing: -0.3px;
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
       color: #fff;
     }
 
-    .logo span.t { color: var(--red); }
-    .logo span.c { color: var(--cyan); }
+    .logo .e { color: var(--red); }
+    .logo .b { color: var(--cyan); }
 
     .nav-links {
       display: flex;
-      gap: 1.5rem;
+      gap: 1.75rem;
       list-style: none;
     }
 
     .nav-links a {
       font-size: 0.875rem;
       color: var(--muted);
-      text-decoration: none;
       transition: color 0.15s;
     }
 
@@ -62,13 +70,26 @@
 
     /* ── HERO ── */
     .hero {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      background: linear-gradient(135deg, #0f0f0f 0%, #1a0a0e 50%, #0a0f1a 100%);
+      padding: 5rem 2rem;
       text-align: center;
-      padding: 5rem 1.5rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(254,44,85,0.12) 0%, transparent 70%),
+                  radial-gradient(ellipse 60% 50% at 50% 100%, rgba(37,244,238,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      max-width: 700px;
+      margin: 0 auto;
     }
 
     .badge {
@@ -80,32 +101,31 @@
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--cyan);
-      background: rgba(37, 244, 238, 0.08);
-      border: 1px solid rgba(37, 244, 238, 0.2);
+      background: rgba(37,244,238,0.08);
+      border: 1px solid rgba(37,244,238,0.2);
       border-radius: 999px;
-      padding: 0.3rem 0.85rem;
+      padding: 0.35rem 0.9rem;
       margin-bottom: 1.75rem;
     }
 
     .hero h1 {
-      font-size: clamp(2.5rem, 7vw, 4.5rem);
+      font-size: clamp(2.2rem, 6vw, 4rem);
       font-weight: 800;
       line-height: 1.1;
       letter-spacing: -1.5px;
       color: #fff;
-      max-width: 700px;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
     }
 
-    .hero h1 .accent-red  { color: var(--red); }
-    .hero h1 .accent-cyan { color: var(--cyan); }
+    .hero h1 .e { color: var(--red); }
+    .hero h1 .b { color: var(--cyan); }
 
     .hero p {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       color: var(--muted);
-      max-width: 520px;
+      max-width: 480px;
+      margin: 0 auto 2.5rem;
       line-height: 1.7;
-      margin-bottom: 2.5rem;
     }
 
     .hero-actions {
@@ -117,143 +137,455 @@
 
     .btn {
       display: inline-block;
-      padding: 0.7rem 1.5rem;
+      padding: 0.75rem 1.6rem;
       border-radius: 6px;
       font-size: 0.9rem;
       font-weight: 600;
-      text-decoration: none;
       transition: opacity 0.15s, transform 0.15s;
+      cursor: pointer;
     }
 
-    .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+    .btn:hover { opacity: 0.88; transform: translateY(-1px); }
 
-    .btn-primary {
-      background: var(--red);
-      color: #fff;
-    }
-
-    .btn-outline {
-      background: transparent;
-      color: var(--text);
-      border: 1px solid #333;
-    }
-
+    .btn-primary { background: var(--red); color: #fff; }
+    .btn-secondary { background: var(--cyan); color: #000; }
+    .btn-outline { background: transparent; color: var(--text); border: 1px solid #333; }
     .btn-outline:hover { border-color: #666; color: #fff; opacity: 1; }
 
-    /* ── FEATURES ── */
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1px;
-      background: var(--border);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
+    /* ── CATEGORIES ── */
+    .section { padding: 3.5rem 2rem; max-width: 1100px; margin: 0 auto; width: 100%; }
 
-    .feature {
-      background: var(--bg);
-      padding: 2rem 1.75rem;
-    }
-
-    .feature-icon {
-      font-size: 1.5rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .feature h3 {
-      font-size: 0.95rem;
-      font-weight: 600;
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: 700;
       color: #fff;
       margin-bottom: 0.4rem;
     }
 
-    .feature p {
+    .section-sub {
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    .categories {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .cat-card {
+      border-radius: 12px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      cursor: pointer;
+      transition: transform 0.2s, opacity 0.2s;
+      text-decoration: none;
+    }
+
+    .cat-card:hover { transform: translateY(-3px); opacity: 0.9; }
+
+    .cat-card.electronics {
+      background: linear-gradient(135deg, #0d1a2e 0%, #0a0f1a 100%);
+      border: 1px solid #1a2a3a;
+    }
+
+    .cat-card.beauty {
+      background: linear-gradient(135deg, #1f0a12 0%, #0f0a0e 100%);
+      border: 1px solid #3a1a2a;
+    }
+
+    .cat-icon { font-size: 2.5rem; }
+
+    .cat-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .cat-card p {
       font-size: 0.85rem;
       color: var(--muted);
-      line-height: 1.6;
+      line-height: 1.5;
+    }
+
+    .cat-link {
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+
+    .cat-card.electronics .cat-link { color: var(--cyan); }
+    .cat-card.beauty .cat-link { color: var(--red); }
+
+    /* ── PRODUCTS ── */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .product-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+      cursor: pointer;
+    }
+
+    .product-card:hover {
+      transform: translateY(-3px);
+      border-color: #333;
+    }
+
+    .product-img {
+      width: 100%;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+    }
+
+    .product-img.elec { background: linear-gradient(135deg, #0d1a2e, #0a0a1a); }
+    .product-img.beauty { background: linear-gradient(135deg, #1f0a12, #0f0a0e); }
+
+    .product-info { padding: 0.9rem; }
+
+    .product-info h4 {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 0.25rem;
+    }
+
+    .product-info .category {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .product-info .price {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--red);
+    }
+
+    .product-info .original {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: line-through;
+      margin-left: 0.4rem;
+    }
+
+    /* ── TRUST ── */
+    .trust-bar {
+      background: var(--surface2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .trust-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: space-around;
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .trust-item span.icon { font-size: 1.2rem; }
+    .trust-item strong { color: var(--text); }
+
+    /* ── TIKTOK CONNECT ── */
+    .tiktok-section {
+      background: linear-gradient(135deg, #0f0f0f, #1a0a0e);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .tiktok-section h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.75rem;
+    }
+
+    .tiktok-section p {
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto 1.75rem;
+      font-size: 0.95rem;
+      line-height: 1.65;
     }
 
     /* ── FOOTER ── */
     footer {
-      padding: 1.5rem 2rem;
+      margin-top: auto;
+      background: var(--surface);
       border-top: 1px solid var(--border);
+      padding: 2rem;
+    }
+
+    .footer-top {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: space-between;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-brand .logo { font-size: 1.2rem; }
+
+    .footer-brand p {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+      max-width: 220px;
+      line-height: 1.6;
+    }
+
+    .footer-col h4 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .footer-col ul a {
+      font-size: 0.83rem;
+      color: var(--muted);
+      transition: color 0.15s;
+    }
+
+    .footer-col ul a:hover { color: #fff; }
+
+    .footer-bottom {
+      max-width: 1100px;
+      margin: 0 auto;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
       gap: 0.75rem;
-      font-size: 0.8rem;
-      color: #555;
+      font-size: 0.78rem;
+      color: #444;
     }
 
-    .footer-links {
-      display: flex;
-      gap: 1.25rem;
+    @media (max-width: 600px) {
+      .categories { grid-template-columns: 1fr; }
+      .products-grid { grid-template-columns: repeat(2, 1fr); }
+      nav { padding: 1rem; }
+      .nav-links { gap: 1rem; }
     }
-
-    .footer-links a {
-      color: #555;
-      text-decoration: none;
-      transition: color 0.15s;
-    }
-
-    .footer-links a:hover { color: var(--muted); }
   </style>
 </head>
 <body>
 
   <!-- NAV -->
   <nav>
-    <span class="logo"><span class="t">tik</span><span class="c">tok</span>-auth</span>
+    <a href="index.html" class="logo"><span class="e">E</span>&amp;<span class="b">B</span> Shop</a>
     <ul class="nav-links">
-      <li><a href="terms.html">Terms</a></li>
+      <li><a href="#electronics">Electronics</a></li>
+      <li><a href="#beauty">Beauty</a></li>
+      <li><a href="contact.html">Contact</a></li>
       <li><a href="privacy.html">Privacy</a></li>
-      <li><a href="mailto:Chkrap47@gmail.com">Contact</a></li>
+      <li><a href="terms.html">Terms</a></li>
     </ul>
   </nav>
 
   <!-- HERO -->
   <section class="hero">
-    <span class="badge">&#x2714; TikTok OAuth Integration</span>
-    <h1>Authenticate with<br/><span class="accent-red">Tik</span><span class="accent-cyan">Tok</span> seamlessly</h1>
-    <p>tiktok-auth provides a simple, secure way to integrate TikTok OAuth into your application — letting users sign in with their TikTok account in seconds.</p>
-    <div class="hero-actions">
-      <a href="https://nuttapong14.github.io/tiktok-auth/" class="btn btn-primary" target="_blank" rel="noopener">Get Started</a>
-      <a href="https://github.com/nuttapong14/tiktok-auth" class="btn btn-outline" target="_blank" rel="noopener">View on GitHub</a>
+    <div class="hero-inner">
+      <span class="badge">&#x2728; Electronics &amp; Beauty — All in One Place</span>
+      <h1>Shop <span class="e">E</span>&amp;<span class="b">B</span> Shop</h1>
+      <p>Discover the latest electronics and premium beauty products, curated and delivered fast. Connect with TikTok to get a personalized shopping experience.</p>
+      <div class="hero-actions">
+        <a href="#electronics" class="btn btn-primary">Shop Electronics</a>
+        <a href="#beauty" class="btn btn-secondary">Shop Beauty</a>
+      </div>
     </div>
   </section>
 
-  <!-- FEATURES -->
-  <div class="features">
-    <div class="feature">
-      <div class="feature-icon">&#x1F510;</div>
-      <h3>Secure OAuth 2.0</h3>
-      <p>Built on TikTok's official OAuth 2.0 flow with token-based authentication and secure session handling.</p>
+  <!-- TRUST BAR -->
+  <div class="trust-bar">
+    <div class="trust-inner">
+      <div class="trust-item"><span class="icon">&#x1F69A;</span><div><strong>Free Shipping</strong><br/>Orders over ฿500</div></div>
+      <div class="trust-item"><span class="icon">&#x1F512;</span><div><strong>Secure Checkout</strong><br/>SSL encrypted</div></div>
+      <div class="trust-item"><span class="icon">&#x1F504;</span><div><strong>Easy Returns</strong><br/>30-day return policy</div></div>
+      <div class="trust-item"><span class="icon">&#x1F4DE;</span><div><strong>24/7 Support</strong><br/>We're here to help</div></div>
     </div>
-    <div class="feature">
-      <div class="feature-icon">&#x26A1;</div>
-      <h3>Fast Integration</h3>
-      <p>Minimal setup required. Drop in the auth flow and your users can sign in with TikTok immediately.</p>
+  </div>
+
+  <!-- CATEGORIES -->
+  <div class="section">
+    <p class="section-title">Shop by Category</p>
+    <p class="section-sub">Browse our top categories</p>
+    <div class="categories">
+      <a href="#electronics" class="cat-card electronics">
+        <div class="cat-icon">&#x1F4F1;</div>
+        <h3>Electronics</h3>
+        <p>Smartphones, earbuds, smartwatches, and the latest tech gadgets.</p>
+        <span class="cat-link">Shop Electronics &rarr;</span>
+      </a>
+      <a href="#beauty" class="cat-card beauty">
+        <div class="cat-icon">&#x1F484;</div>
+        <h3>Beauty</h3>
+        <p>Skincare, makeup, fragrances, and premium beauty essentials.</p>
+        <span class="cat-link">Shop Beauty &rarr;</span>
+      </a>
     </div>
-    <div class="feature">
-      <div class="feature-icon">&#x1F6E1;&#xFE0F;</div>
-      <h3>Privacy First</h3>
-      <p>Only the data you need is collected. Full transparency via our <a href="privacy.html" style="color: var(--cyan);">Privacy Policy</a>.</p>
+  </div>
+
+  <!-- ELECTRONICS -->
+  <div class="section" id="electronics">
+    <p class="section-title">&#x1F4F1; Electronics</p>
+    <p class="section-sub">Top picks in tech</p>
+    <div class="products-grid">
+      <div class="product-card">
+        <div class="product-img elec">&#x1F4F1;</div>
+        <div class="product-info">
+          <h4>Wireless Earbuds Pro</h4>
+          <p class="category">Electronics</p>
+          <span class="price">฿1,290</span><span class="original">฿1,890</span>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img elec">&#x231A;</div>
+        <div class="product-info">
+          <h4>Smart Watch Series X</h4>
+          <p class="category">Electronics</p>
+          <span class="price">฿2,490</span><span class="original">฿3,200</span>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img elec">&#x1F4BB;</div>
+        <div class="product-info">
+          <h4>Portable Charger 20K</h4>
+          <p class="category">Electronics</p>
+          <span class="price">฿590</span><span class="original">฿890</span>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img elec">&#x1F3A7;</div>
+        <div class="product-info">
+          <h4>Noise-Cancel Headphones</h4>
+          <p class="category">Electronics</p>
+          <span class="price">฿1,890</span><span class="original">฿2,590</span>
+        </div>
+      </div>
     </div>
-    <div class="feature">
-      <div class="feature-icon">&#x1F4DC;</div>
-      <h3>Clear Terms</h3>
-      <p>Simple, readable <a href="terms.html" style="color: var(--red);">Terms &amp; Conditions</a> so you always know what to expect.</p>
+  </div>
+
+  <!-- BEAUTY -->
+  <div class="section" id="beauty">
+    <p class="section-title">&#x1F484; Beauty</p>
+    <p class="section-sub">Glow up with our top beauty picks</p>
+    <div class="products-grid">
+      <div class="product-card">
+        <div class="product-img beauty">&#x1F9F4;</div>
+        <div class="product-info">
+          <h4>Vitamin C Serum</h4>
+          <p class="category">Skincare</p>
+          <span class="price">฿490</span><span class="original">฿790</span>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img beauty">&#x1F484;</div>
+        <div class="product-info">
+          <h4>Matte Lip Kit</h4>
+          <p class="category">Makeup</p>
+          <span class="price">฿390</span><span class="original">฿590</span>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img beauty">&#x1F9F6;</div>
+        <div class="product-info">
+          <h4>Hydrating Face Mask</h4>
+          <p class="category">Skincare</p>
+          <span class="price">฿290</span><span class="original">฿450</span>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img beauty">&#x1F338;</div>
+        <div class="product-info">
+          <h4>Rose Water Toner</h4>
+          <p class="category">Skincare</p>
+          <span class="price">฿350</span><span class="original">฿520</span>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <!-- TIKTOK CONNECT -->
+  <div class="tiktok-section">
+    <h2>&#x1F3B5; Sign in with TikTok</h2>
+    <p>Connect your TikTok account to get personalized product recommendations, exclusive deals, and a seamless shopping experience tailored just for you.</p>
+    <a href="#" class="btn btn-primary">Connect TikTok Account</a>
   </div>
 
   <!-- FOOTER -->
   <footer>
-    <span>&copy; 2026 tiktok-auth. All rights reserved.</span>
-    <div class="footer-links">
-      <a href="terms.html">Terms &amp; Conditions</a>
-      <a href="privacy.html">Privacy Policy</a>
-      <a href="mailto:Chkrap47@gmail.com">Contact</a>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="logo"><span class="e">E</span>&amp;<span class="b">B</span> Shop</a>
+        <p>Your one-stop destination for Electronics &amp; Beauty products in Thailand.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="#electronics">Electronics</a></li>
+          <li><a href="#beauty">Beauty</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+          <li><a href="terms.html">Terms &amp; Conditions</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="contact.html">Contact Us</a></li>
+          <li><a href="mailto:Chkrap47@gmail.com">Chkrap47@gmail.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 E&amp;B Shop. All rights reserved.</span>
+      <span>
+        <a href="privacy.html" style="color:#555; margin-right:1rem;">Privacy Policy</a>
+        <a href="terms.html" style="color:#555;">Terms &amp; Conditions</a>
+      </span>
     </div>
   </footer>
 
